@@ -21,22 +21,18 @@ export interface IProduct {
 export type TPayment = "online" | "cash";
 
 export interface IBuyer {
-  paymentType: TPayment;
+  payment: TPayment;
   email: string;
   phone: string;
   address: string;
 }
 
 export interface ICatalogData {
-  length: number;
+  total: number;
   items: IProduct[];
 }
 
-export type TOrder = {
-  payment: TPayment;
-  email: string;
-  phone: string;
-  address: string;
+export interface IOrder extends IBuyer {
   total: number;
   items: string[];
-};
+}

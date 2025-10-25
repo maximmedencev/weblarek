@@ -160,6 +160,7 @@ type TOrder = {
   items: string[];
 };
 ```
+
 Поля типа данных:
 `payment: TPayment` - способ оплаты ("online" или "cash").
 `email: string` - электронная почта покупателя.
@@ -263,7 +264,7 @@ interface ICatalogData {
 ```
 
 Поля интерфейса:
-`length:number` - количество товаров
+`total:number` - количество товаров
 `items: IProduct[]` - массив содержащий данные товаров
 
 #### Класа DataExchanger
@@ -277,3 +278,4 @@ interface ICatalogData {
 
 Методы:
 `async getProducts(): Promise<ICatalogData>` - асинхронный метод возвращает промис с данными в формате ICatalogData
+`async sendOrder(orderData: IOrder): Promise<object>` - асинхронный метод возвращает промис с ответом сервера, после отправки данных заказа
