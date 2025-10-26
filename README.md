@@ -267,7 +267,22 @@ interface ICatalogData {
 `total:number` - количество товаров
 `items: IProduct[]` - массив содержащий данные товаров
 
-#### Класа DataExchanger
+#### Интерфейс "Ответ по заказу"
+
+Интерфейс для типизации ответа сервера после отправки данных заказа.
+
+```typescript
+export interface IOrderResponse {
+  id: string;
+  total: number;
+}
+```
+
+Поля интерфейса:
+`id: string` - идентификатор заказа
+`total: number` - сумма заказа
+
+#### Класс DataExchanger
 
 За обмен данными с сервером отвечает объект на основе класса DataExchanger.
 Конструктор:
@@ -278,4 +293,5 @@ interface ICatalogData {
 
 Методы:
 `async getProducts(): Promise<ICatalogData>` - асинхронный метод возвращает промис с данными в формате ICatalogData
-`async sendOrder(orderData: IOrder): Promise<object>` - асинхронный метод возвращает промис с ответом сервера, после отправки данных заказа
+`async sendOrder(orderData: IOrder): Promise<IOrderResponse>` - асинхронный метод возвращает промис с ответом сервера, после отправки данных заказа
+
