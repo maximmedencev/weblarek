@@ -1,4 +1,4 @@
-import { ICatalogData, IOrder, IApi } from "../../types";
+import { ICatalogData, IOrder, IApi, IOrderResponse } from "../../types";
 
 export class DataExchanger {
   private _api: IApi;
@@ -8,11 +8,10 @@ export class DataExchanger {
   }
 
   async getProducts(): Promise<ICatalogData> {
-    const response: ICatalogData = await this._api.get("/product/");
-    return response;
+    return await this._api.get("/product/");
   }
 
-  async sendOrder(orderData: IOrder): Promise<object> {
+  async sendOrder(orderData: IOrder): Promise<IOrderResponse> {
     return await this._api.post("/order/", orderData);
   }
 }
