@@ -23,7 +23,7 @@
 
 ```
 npm install
-npm run start
+npm run dev
 ```
 
 или
@@ -295,3 +295,283 @@ export interface IOrderResponse {
 `async getProducts(): Promise<ICatalogData>` - асинхронный метод возвращает промис с данными в формате ICatalogData
 `async sendOrder(orderData: IOrder): Promise<IOrderResponse>` - асинхронный метод возвращает промис с ответом сервера, после отправки данных заказа
 
+### Слой представления
+
+#### Интерфейс для шапки сайта
+
+```typescript
+interface IHeader {
+  counter: number;
+}
+```
+
+Поля интерфейса:
+`counter: number` - счетчик товаров в корзине.
+
+#### Класс Header
+
+Класс отвечает за отображение шапки сайта. Наследуется от класса `Component<IHeader>`
+
+Конструктор:
+`constructor(container: HTMLElement, protected events: IEvents)` - в конструктор передается элемент корневого контейнера и брокер событий
+
+Поля класса:
+`basketButton: HTMLButtonElement` - приватное поле содержащее элемент "кнопка корзины"
+`counterElement: HTMLElement` - приватное поле содержащее элемент "счетчик корзины"
+
+Методы:
+`set counter(value: number) ` - метод изменения количества выбраных товаров в шапке
+
+#### Интерфейс "галерея"
+
+```typescript
+interface IGallery {
+  items: HTMLElement[];
+}
+```
+
+Поля интерфейса:
+`items: HTMLElement[]` - элементы карточек товаров.
+
+#### Класс Gallery
+
+Класс используется для отображения галлереи карточек. Наследуется от Component<IGallery>
+
+Конструктор:
+`constructor(protected container: HTMLElement)` - в конструктор передается элемент корневого контейнера
+
+Поля класа:
+Класс не содержит собственных полей
+
+Методы:
+`set items(items: HTMLElement[])` - сеттер для передачи элементов карточек
+
+#### Класс Card
+
+Абстрактный класс с общим функционалом классов карточек слоя представления
+
+Конструктор:
+`constructor(protected container: HTMLElement)` - в конструктор передается корневой контейнер класса
+
+Поля:
+`protected titleElement: HTMLElement | null = null` - элемент с заголовком карточки
+`protected priceElement: HTMLElement | null = null` - элемент с ценой карточки
+
+Методы:
+`set title(value: string)` - установить отображение заголовока
+`set price(value: number | null)` - установить отображение цены
+
+#### Интерфейс ICardActions
+
+Интерфейс описывает действия пользователя при взаимодействии с карточкой
+
+```typescript
+export interface ICardActions {
+  onClick?: () => void;
+}
+```
+
+Поля интерфейса:
+`onClick?: () => void` - колбэк при нажатии на карточку
+
+#### Класс CardCatalog
+
+Класс слоя представления отвечающий за отображение карточки в каталоге. Потомок класса CardCard<TCardPreview>
+
+Конструктор:
+`constructor(protected container: HTMLElement, actions?: ICardActions)` - в конструткор передается корневой элемент контейнер и необязательное поле с колбэками для обработки действий польователя
+
+Поля:
+`protected imageElement: HTMLImageElement` - элемент-картинка карточки
+`protected categoryElement: HTMLElement` - элемент обозначающий категорию
+
+Методы:
+`set category(value: string)` - установка отображения категории
+`set image(value: string)` - установка url к картинке
+
+#### Класс CardPreview
+
+Класс слоя представления отвечающий за отображение карточки в виде превью. Потомок Card<TCardBasket>
+
+Конструктор:
+`constructor(protected container: HTMLElement, actions?: ICardActions)` - в конструткор передается корневой элемент контейнер и необязательное поле с колбэками для обработки действий пользователя
+
+Поля:
+`protected descriptionElement: HTMLElement` - элемент с описанием товара
+`protected buttonElement: HTMLButtonElement` - кнопка "купить"
+`protected categoryElement: HTMLElement` - элемент категория товара
+`protected imageElement: HTMLImageElement` - элемент с картинкой товара
+
+Методы:
+`set isInCart(value: boolean)` - сеттер установливающий надпись на кнопке
+`set category(value: string)` - устанавливает отображение категории
+`set image(value: string)` - устанавливает url к картинке товара
+`setButtonDisabled(value: boolean): void` - управляет доступностью кнопки
+
+#### Интерфейс ICardBasketActions
+
+Интерфейс описывает действия пользователя при взаимодействии с карточкой в корзине
+
+```typescript
+export interface ICardBasketActions {
+  onRemove?: () => void;
+}
+```
+
+Поля:
+`onRemove?: () => void` - колбэк при нажатии на кнопку "удалить" в карточке
+
+#### Класс CardBasket
+
+Класс слоя представления отвечающий за отображение карточки в корзине
+
+Конструктор:
+`constructor(protected container: HTMLElement, actions?: ICardBasketActions)` - в конструткор передается корневой элемент контейнер и необязательное поле с колбэками для обработки действий польователя
+
+Поля:
+`protected indexElement: HTMLElement | null = null` - элемент с порядковым номером товара в заказе
+`protected deleteButton: HTMLButtonElement | null = null` - кнопка удаления товара из корзины
+
+Методы:
+`setIndex(index: number): void` - устанавливает номер товара в корзине
+
+#### Класс Form
+
+Абстрактный класс содержащий общую для всех форм функциональность
+
+Конструктор:
+`constructor(protected container: HTMLFormElement, protected events: IEvents)` - в конструткор передается корневой элемент контейнер и брокер событий
+
+Поля
+`protected submitButton: HTMLButtonElement` - кнопка сабмит
+`protected errorsElement: HTMLElement` - элемент с ошибками валидации
+
+Методы:
+`set submitButtonDisabled(state: boolean)` - определяет доступность кнопки сабмита
+
+#### Класс OrderForm
+
+Класс отвечающий за то, как будет выглядеть форма заказа потомок Form<TOrderFormData>
+
+Конструктор:
+`constructor(protected container: HTMLFormElement, protected events: IEvents)` - в конструктор передается корневой контейнер и брокер событий
+
+Поля:
+`protected onlineButton: HTMLButtonElement` - кнопка выбора онлайн-оплаты
+`protected cashButton: HTMLButtonElement` - кнопка выбора оплаты наличными
+`protected addressInput: HTMLInputElement` - поле адреса
+
+Методы:
+`setPayment(payment: TPayment): void` - устанавливает оформление кнопок онлайн и наличной оплаты в зависимости от переданного параметра
+`setFormData(data: TOrderFormData): void` - устанавливает переданные данные формы
+`setErrors(errors: Partial<TBuyerErrors>): void` - отображает переданные ошибки в форме
+
+#### Класс ContactsForm
+
+Класс отвечающий за отображение формы контактов. Потомок Form<TContactsFormData>
+
+Конструктор:
+`constructor(protected container: HTMLFormElement, protected events: IEvents)` - в конструткор передается корневой элемент контейнер и брокер событий
+
+Поля
+`protected emailInput: HTMLInputElement`
+`protected phoneInput: HTMLInputElement`
+
+Методы:
+`setFormData(data: TContactsFormData): void` - устанавливает переданные данные формы
+`setErrors(errors: Partial<TBuyerErrors>): void` - отображает переданные ошибки в форме
+
+#### Класс Modal
+Класс отвечающий за отображение с модального окна
+
+Конструктор:
+`constructor(protected container: HTMLFormElement, protected events: IEvents)` - в конструткор передается корневой элемент контейнер и брокер событий
+
+Поля:
+`protected closeButton: HTMLButtonElement`
+`protected contentElement: HTMLElement`
+`protected container: HTMLElement`
+
+Методы:
+`setVisible(state: boolean)` - устанавливает видимость модального окна 
+`set content(content: HTMLElement)` - устанавливает содержимое модалки
+
+#### Интерфейс ISuccess
+Интерфейс описывает данные которые необходимы для работы с компонентом Success
+
+```typescript
+export interface ISuccess {
+  total: number;
+}
+```
+Поля:
+`total: number` - итоговая сумма заказа
+
+
+#### Класс Success
+Класс Success это наследник класса Component<ISuccess>
+
+Конструктор:
+`constructor(protected container: HTMLElement, protected events: IEvents)` - в конструткор передается корневой элемент контейнер и брокер событий
+
+Поля:
+`protected closeElement: HTMLButtonElement` - кнопка "закрыть"
+`protected descriptionElement: HTMLElement` - итогвая сумма по заказу
+
+Методы:
+`set total(value: number)` - установить итоговую сумму
+
+
+###  Словарь событий
+```typescript
+export const EVENTS = {
+  catalog: {
+    changed: "catalog:changed", //событие изменнения данных модели корзины
+  },
+
+  card: {
+    select: "card:select", //выбор карточки для превью
+  },
+
+  basket: {
+    open: "basket:open",         //открытие корзины
+    checkout: "basket:checkout", //подтверждение списка товаров
+  },
+
+  cart: {
+    remove: "cart:remove", //удаление товара в модели корзины
+    clear: "cart:clear",   //очистка корзины
+    add: "cart:add",       //добавление товара в корзину
+  },
+
+  order: {
+    submit: "order:submit",   //подтверждение заказа
+    address: "order:address", //изменение поля адреса
+    payment: "order:payment", //изменение типа оплаты
+  },
+
+  contacts: {
+    submit: "contacts:submit", //подтверждение контактных данныъ
+    email: "contacts:email",   //изменение поля эл.почты
+    phone: "contacts:phone",   //изменение поля номера телефона
+  },
+
+  buyer: {
+    paymentChanged: "buyer:payment-changed", //изменение типа оплаты в модели данных
+    addressChanged: "buyer:address-changed", //изменение адреса в модели данных
+    emailChanged: "buyer:email-changed",     //изменение эл.почты в модели данных
+    phoneChanged: "buyer:phone-changed",     //изменение номера телефона в модели данных
+    dataChanged: "buyer:data-changed",       //изменение данных покупателя
+    clear: "buyer:clear",                    //очистка данных покупателя
+  },
+
+  success: {
+    close: "success:close", //событие закрытия окна успешного оформления заказа
+  },
+
+  modal: {
+    close: "modal:close", //событие закрытия модалки
+  },
+} as const;
+
+```

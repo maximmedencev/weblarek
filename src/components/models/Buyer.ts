@@ -1,7 +1,9 @@
 import { IBuyer } from "../../types";
 import { TPayment } from "../../types";
+import { IEvents } from "../base/Events";
+import { EVENTS } from "../../types";
 
-type TBuyerErrors = Partial<Record<keyof IBuyer, string>>;
+export type TBuyerErrors = Partial<Record<keyof IBuyer, string>>;
 
 export class Buyer {
   private payment: TPayment | null = null;
@@ -9,7 +11,7 @@ export class Buyer {
   private phone: string = "";
   private address: string = "";
 
-  constructor() {}
+  constructor(protected events: IEvents) {}
 
   setData(data: Partial<IBuyer>): void {
     if (data.email !== undefined) {
@@ -24,6 +26,7 @@ export class Buyer {
     if (data.payment !== undefined) {
       this.payment = data.payment;
     }
+    this.events.emit(EVENTS.buyer.dataChanged);
   }
 
   getData(): IBuyer {
@@ -40,11 +43,31 @@ export class Buyer {
     this.payment = null;
     this.email = "";
     this.phone = "";
+    this.events.emit(EVENTS.buyer.clear);
+  }
+
+  setPayment(payment: TPayment): void {
+    this.payment = payment;
+    this.events.emit(EVENTS.buyer.paymentChanged, { payment });
+  }
+
+  setAddress(address: string): void {
+    this.address = address;
+    this.events.emit(EVENTS.buyer.addressChanged);
+  }
+
+  setEmail(email: string): void {
+    this.email = email;
+    this.events.emit(EVENTS.buyer.emailChanged);
+  }
+
+  setPhone(phone: string): void {
+    this.phone = phone;
+    this.events.emit(EVENTS.buyer.phoneChanged);
   }
 
   validate(): TBuyerErrors {
     const errors: TBuyerErrors = {};
-
     if (!this.address) {
       errors.address = "Не указан адрес";
     }

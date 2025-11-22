@@ -41,3 +41,89 @@ export interface IOrderResponse {
   id: string;
   total: number;
 }
+
+export interface IHeader {
+  counter: number;
+}
+
+export interface ICardActions {
+  onClick?: () => void;
+}
+
+export interface ICardPreviewActions {
+  onChange?: () => void;
+}
+
+export interface ICardBasketActions {
+  onRemove?: () => void;
+}
+
+export interface IOrderFormActions {
+  onSubmit?: () => void;
+}
+
+export interface IBasketData {
+  items: HTMLElement[];
+  total: number;
+}
+
+export interface IGallery {
+  items: HTMLElement[];
+}
+
+export interface ISuccess {
+  total: number;
+}
+
+export const SYNAPSE_CURRENCY_NAME = "синапсов";
+
+export const EVENTS = {
+  catalog: {
+    changed: "catalog:changed",
+  },
+
+  card: {
+    select: "card:select",
+    remove: "card:remove",
+  },
+
+  basket: {
+    open: "basket:open",
+    checkout: "basket:checkout",
+  },
+
+  cart: {
+    remove: "cart:remove",
+    clear: "cart:clear",
+    add: "cart:add",
+  },
+
+  order: {
+    submit: "order:submit",
+    address: "order:address",
+    payment: "order:payment",
+  },
+
+  contacts: {
+    submit: "contacts:submit",
+    email: "contacts:email",
+    phone: "contacts:phone",
+  },
+
+  buyer: {
+    paymentChanged: "buyer:payment-changed",
+    addressChanged: "buyer:address-changed",
+    emailChanged: "buyer:email-changed",
+    phoneChanged: "buyer:phone-changed",
+    dataChanged: "buyer:data-changed",
+    clear: "buyer:clear",
+  },
+
+  success: {
+    close: "success:close",
+  },
+
+  modal: {
+    close: "modal:close",
+  },
+} as const;
