@@ -531,6 +531,7 @@ export const EVENTS = {
 
   card: {
     select: "card:select", //выбор карточки для превью
+    remove: "card:remove", //удалить карточку из корзины
   },
 
   basket: {
@@ -548,6 +549,7 @@ export const EVENTS = {
     submit: "order:submit",   //подтверждение заказа
     address: "order:address", //изменение поля адреса
     payment: "order:payment", //изменение типа оплаты
+    success: "order:success", //удачное завершение заказа
   },
 
   contacts: {
@@ -562,7 +564,6 @@ export const EVENTS = {
     emailChanged: "buyer:email-changed",     //изменение эл.почты в модели данных
     phoneChanged: "buyer:phone-changed",     //изменение номера телефона в модели данных
     dataChanged: "buyer:data-changed",       //изменение данных покупателя
-    clear: "buyer:clear",                    //очистка данных покупателя
   },
 
   success: {
@@ -573,5 +574,3 @@ export const EVENTS = {
     close: "modal:close", //событие закрытия модалки
   },
 } as const;
-
-```
