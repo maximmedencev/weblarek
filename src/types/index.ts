@@ -18,7 +18,7 @@ export interface IProduct {
   price: number | null;
 }
 
-export type TPayment = "online" | "cash";
+export type TPayment = "online" | "cash" | null;
 
 export interface IBuyer {
   payment: TPayment;
@@ -102,6 +102,7 @@ export const EVENTS = {
     submit: "order:submit",
     address: "order:address",
     payment: "order:payment",
+    success: "order:success",
   },
 
   contacts: {
@@ -116,7 +117,6 @@ export const EVENTS = {
     emailChanged: "buyer:email-changed",
     phoneChanged: "buyer:phone-changed",
     dataChanged: "buyer:data-changed",
-    clear: "buyer:clear",
   },
 
   success: {

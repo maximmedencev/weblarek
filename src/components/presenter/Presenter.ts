@@ -6,7 +6,7 @@ import { ProductCatalog } from "../models/ProductCatalog";
 import { Api } from "../base/Api";
 import { ensureElement } from "../../utils/utils";
 import { CDN_URL } from "../../utils/constants";
-import { Header } from "../views/Header";
+import { Header } from "../header/Header";
 import { Modal } from "../views/modal/Modal";
 import { CardPreview } from "../views/card/CardPreview";
 import { OrderForm } from "../views/forms/OrderForm";

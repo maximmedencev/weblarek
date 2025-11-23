@@ -14,11 +14,6 @@ export abstract class Form<T> extends Component<T> {
       container
     );
     this.errorsElement = ensureElement<HTMLElement>(".form__errors", container);
-
-    this.container.addEventListener("submit", (e: Event) => {
-      e.preventDefault();
-      this.events.emit(`${this.container.getAttribute("name")}:submit`);
-    });
   }
 
   set submitButtonDisabled(state: boolean) {

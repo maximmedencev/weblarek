@@ -39,6 +39,10 @@ export class OrderForm extends Form<TOrderFormData> {
         address: this.addressInput.value,
       })
     );
+    this.container.addEventListener("submit", (e: Event) => {
+      e.preventDefault();
+      this.events.emit(EVENTS.order.submit);
+    });
   }
 
   setPayment(payment: TPayment): void {
@@ -57,6 +61,8 @@ export class OrderForm extends Form<TOrderFormData> {
 
     this.onlineButton.classList.remove("button_alt-active");
     this.cashButton.classList.remove("button_alt-active");
+
+    if (data.payment === null) return;
 
     if (data.payment === "online") {
       this.onlineButton.classList.add("button_alt-active");

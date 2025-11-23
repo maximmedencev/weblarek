@@ -36,6 +36,11 @@ export class ContactsForm extends Form<TContactsFormData> {
         phone: this.phoneInput.value,
       })
     );
+
+    this.container.addEventListener("submit", (e: Event) => {
+      e.preventDefault();
+      this.events.emit(EVENTS.contacts.submit);
+    });
   }
 
   setFormData(data: TContactsFormData): void {

@@ -43,7 +43,6 @@ export class Buyer {
     this.payment = null;
     this.email = "";
     this.phone = "";
-    this.events.emit(EVENTS.buyer.clear);
   }
 
   setPayment(payment: TPayment): void {
