@@ -42,17 +42,15 @@ export class ContactsForm extends Form<TContactsFormData> {
       this.events.emit(EVENTS.contacts.submit);
     });
   }
-
-  setFormData(data: TContactsFormData): void {
-    this.emailInput.value = data.email;
-    this.phoneInput.value = data.phone;
+  set email(value: string) {
+    this.emailInput.value = value;
+  }
+  set phone(value: string) {
+    this.phoneInput.value = value;
   }
 
   setErrors(errors: Partial<TBuyerErrors>): void {
-    const messages = [errors.email, errors.phone].filter(
-      (msg): msg is string => typeof msg === "string" && msg.trim() !== ""
-    );
-
+    const messages = [errors.email, errors.phone];
     this.errorsElement.textContent = messages.join(" ");
   }
 }

@@ -463,7 +463,6 @@ export interface ICardBasketActions {
 
 Методы:
 `setPayment(payment: TPayment): void` - устанавливает оформление кнопок онлайн и наличной оплаты в зависимости от переданного параметра
-`setFormData(data: TOrderFormData): void` - устанавливает переданные данные формы
 `setErrors(errors: Partial<TBuyerErrors>): void` - отображает переданные ошибки в форме
 
 #### Класс ContactsForm
@@ -478,7 +477,6 @@ export interface ICardBasketActions {
 `protected phoneInput: HTMLInputElement`
 
 Методы:
-`setFormData(data: TContactsFormData): void` - устанавливает переданные данные формы
 `setErrors(errors: Partial<TBuyerErrors>): void` - отображает переданные ошибки в форме
 
 #### Класс Modal
@@ -527,10 +525,10 @@ export interface ISuccess {
 export const EVENTS = {
   catalog: {
     changed: "catalog:changed", //событие изменнения данных модели корзины
+    select: "catalog:select", //выбор товара для превью
   },
 
   card: {
-    select: "card:select", //выбор карточки для превью
     remove: "card:remove", //удалить карточку из корзины
   },
 
@@ -540,9 +538,7 @@ export const EVENTS = {
   },
 
   cart: {
-    remove: "cart:remove", //удаление товара в модели корзины
-    clear: "cart:clear",   //очистка корзины
-    add: "cart:add",       //добавление товара в корзину
+    changed: "cart:changed", //изменение в объекте корзины
   },
 
   order: {

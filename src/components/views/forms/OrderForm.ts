@@ -45,9 +45,13 @@ export class OrderForm extends Form<TOrderFormData> {
     });
   }
 
-  setPayment(payment: TPayment): void {
+  set payment(payment: TPayment) {
     this.onlineButton.classList.remove("button_alt-active");
     this.cashButton.classList.remove("button_alt-active");
+
+    if (!payment) {
+      return;
+    }
 
     if (payment === "online") {
       this.onlineButton.classList.add("button_alt-active");
@@ -56,26 +60,12 @@ export class OrderForm extends Form<TOrderFormData> {
     }
   }
 
-  setFormData(data: TOrderFormData): void {
-    this.addressInput.value = data.address;
-
-    this.onlineButton.classList.remove("button_alt-active");
-    this.cashButton.classList.remove("button_alt-active");
-
-    if (data.payment === null) return;
-
-    if (data.payment === "online") {
-      this.onlineButton.classList.add("button_alt-active");
-    } else {
-      this.cashButton.classList.add("button_alt-active");
-    }
+  set address(value: string) {
+    this.addressInput.value = value;
   }
 
   setErrors(errors: Partial<TBuyerErrors>): void {
-    const messages = [errors.payment, errors.address].filter(
-      (msg): msg is string => typeof msg === "string" && msg.trim() !== ""
-    );
-
+    const messages = [errors.payment, errors.address];
     this.errorsElement.textContent = messages.join(" ");
   }
 }

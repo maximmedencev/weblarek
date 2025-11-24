@@ -67,16 +67,16 @@ export class Buyer {
 
   validate(): TBuyerErrors {
     const errors: TBuyerErrors = {};
-    if (!this.address) {
+    if (!this.address || this.address === "") {
       errors.address = "Не указан адрес";
     }
-    if (!this.email) {
+    if (!this.email || this.email === "") {
       errors.email = "Укажите адрес электронной почты";
     }
     if (!this.payment) {
       errors.payment = "Не выбран способ оплаты";
     }
-    if (!this.phone) {
+    if (!this.phone || this.phone === "") {
       errors.phone = "Не указан номер телефона";
     }
     return errors;

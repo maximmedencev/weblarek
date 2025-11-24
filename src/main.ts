@@ -64,7 +64,9 @@ const cardCatalogTemplate = ensureElement<HTMLTemplateElement>("#card-catalog");
 events.on(EVENTS.catalog.changed, () => {
   const itemCards = catalog.getProducts().map((product) => {
     const card = new CardCatalog(cloneTemplate(cardCatalogTemplate), {
-      onClick: () => events.emit(EVENTS.card.select, product),
+      onClick: () => {
+        catalog.setSelectedProduct(product);
+      },
     });
     return card.render(product);
   });
@@ -72,8 +74,8 @@ events.on(EVENTS.catalog.changed, () => {
   gallery.items = itemCards;
 });
 
-events.on<IProduct>(EVENTS.card.select, (product) => {
-  openPreview(product);
+events.on<IProduct>(EVENTS.catalog.select, () => {
+  openPreview();
 });
 
 events.on(EVENTS.basket.open, () => {
@@ -84,9 +86,8 @@ events.on<IProduct>(EVENTS.card.remove, (product) => {
   cart.removeItem(product.id);
 });
 
-events.on(EVENTS.cart.add, () => updateBasket());
-events.on(EVENTS.cart.remove, () => updateBasket());
-events.on(EVENTS.cart.clear, () => updateBasket());
+events.on(EVENTS.cart.changed, () => updateBasket());
+
 events.on(EVENTS.basket.checkout, () => {
   openOrderForm();
 });
@@ -111,7 +112,7 @@ events.on<{ phone: string }>(EVENTS.contacts.phone, (data) => {
 });
 
 events.on<{ payment: TPayment }>(EVENTS.buyer.paymentChanged, (data) => {
-  orderForm.setPayment(data.payment);
+  orderForm.payment = data.payment;
   updateOrderFormValidity();
 });
 
@@ -138,7 +139,9 @@ events.on(EVENTS.contacts.submit, () => {
       total: cart.getTotalPrice(),
     })
     .then((result) => {
-      events.emit("order:success");
+      openSuccess(result);
+      cart.clear();
+      buyer.clear();
     })
     .catch((error) => {
       console.error("Ошибка отправки заказа:", error);
@@ -153,13 +156,6 @@ events.on(EVENTS.modal.close, () => {
   modal.setVisible(false);
 });
 
-events.on(EVENTS.order.success, () => {
-  openSuccess();
-  clearForms();
-  cart.clear();
-  buyer.clear();
-});
-
 function loadCatalog() {
   dataExchanger
     .getProducts()
@@ -170,7 +166,11 @@ function loadCatalog() {
     .catch((error) => console.log("Ошибка при получении данных:", error));
 }
 
-function openPreview(product: IProduct) {
+function openPreview() {
+  const product = catalog.getSelectedProduct();
+  if (!product) {
+    return;
+  }
   const card = new CardPreview(cloneTemplate(cardPreviewElement), {
     onChange: () => {
       const isInCart: boolean = cart.hasItem(product.id);
@@ -230,30 +230,11 @@ function updateBasket() {
 function openOrderForm() {
   const buyerData = buyer.getData();
 
-  if (buyerData.payment || buyerData.address) {
-    orderForm.setFormData({
-      payment: buyerData.payment,
-      address: buyerData.address,
-    });
-  }
-
-  modal.content = orderForm.render();
-}
-
-function clearForms() {
-  orderForm.setFormData({
-    payment: null,
-    address: "",
+  updateOrderFormValidity();
+  modal.content = orderForm.render({
+    payment: buyerData.payment,
+    address: buyerData.address,
   });
-
-  orderForm.submitButtonDisabled = true;
-
-  contactsForm.setFormData({
-    email: "",
-    phone: "",
-  });
-
-  contactsForm.submitButtonDisabled = true;
 }
 
 function updateOrderFormValidity() {
@@ -266,15 +247,11 @@ function updateOrderFormValidity() {
 
 function openContactsForm() {
   const buyerData = buyer.getData();
-  
-  if (buyerData.email || buyerData.phone) {
-    contactsForm.setFormData({
-      email: buyerData.email,
-      phone: buyerData.phone,
-    });
-  }
-
-  modal.content = contactsForm.render();
+  updateContactsFormValidity();
+  modal.content = contactsForm.render({
+    email: buyerData.email,
+    phone: buyerData.phone,
+  });
 }
 
 function updateContactsFormValidity() {
@@ -285,7 +262,7 @@ function updateContactsFormValidity() {
   contactsForm.submitButtonDisabled = hasErrors;
 }
 
-function openSuccess(): void {
-  success.total = cart.getTotalPrice();
+function openSuccess({ total }: { total: number }): void {
+  success.total = total;
   modal.content = success.render();
 }

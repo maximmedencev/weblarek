@@ -80,10 +80,10 @@ export const SYNAPSE_CURRENCY_NAME = "синапсов";
 export const EVENTS = {
   catalog: {
     changed: "catalog:changed",
+    select: "catalog:select",
   },
 
   card: {
-    select: "card:select",
     remove: "card:remove",
   },
 
@@ -93,16 +93,14 @@ export const EVENTS = {
   },
 
   cart: {
-    remove: "cart:remove",
+    changed: "cart:changed",
     clear: "cart:clear",
-    add: "cart:add",
   },
 
   order: {
     submit: "order:submit",
     address: "order:address",
     payment: "order:payment",
-    success: "order:success",
   },
 
   contacts: {
@@ -117,6 +115,7 @@ export const EVENTS = {
     emailChanged: "buyer:email-changed",
     phoneChanged: "buyer:phone-changed",
     dataChanged: "buyer:data-changed",
+    clear: "buyer:clear",
   },
 
   success: {

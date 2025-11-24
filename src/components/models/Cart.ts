@@ -14,18 +14,18 @@ export class Cart {
   addItem(product: IProduct): void {
     if (!this.hasItem(product.id)) {
       this.items.push(product);
-      this.events.emit(EVENTS.cart.add, product);
+      this.events.emit(EVENTS.cart.changed);
     }
   }
 
   removeItem(productId: string) {
     this.items = this.items.filter((item) => item.id !== productId);
-    this.events.emit(EVENTS.cart.remove, { productId: productId });
+    this.events.emit(EVENTS.cart.changed, { productId: productId });
   }
 
   clear(): void {
     this.items = [];
-    this.events.emit(EVENTS.cart.clear);
+    this.events.emit(EVENTS.cart.changed);
   }
 
   getTotalPrice(): number {
