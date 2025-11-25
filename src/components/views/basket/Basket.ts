@@ -25,6 +25,8 @@ export class Basket extends Component<IBasketData> {
       container
     );
 
+    this.checkoutButton.disabled = true;
+
     this.checkoutButton.addEventListener("click", () => {
       this.events.emit(EVENTS.basket.checkout);
     });
