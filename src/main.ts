@@ -1,7 +1,7 @@
 import "./scss/styles.scss";
 import { ensureElement } from "./utils/utils";
 import { EventEmitter } from "./components/base/Events";
-import { Header } from "./components/header/Header";
+import { Header } from "./components/views/header/Header";
 import { Modal } from "./components/views/modal/Modal";
 import { Basket } from "./components/views/basket/Basket";
 import { API_URL } from "./utils/constants";

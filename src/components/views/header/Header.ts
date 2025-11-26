@@ -1,8 +1,8 @@
-import { Component } from "../base/Component";
-import { ensureElement } from "../../utils/utils";
-import { IEvents } from "../base/Events";
-import { IHeader } from "../../types";
-import { EVENTS } from "../../types";
+import { Component } from "../../base/Component";
+import { ensureElement } from "../../../utils/utils";
+import { IEvents } from "../../base/Events";
+import { IHeader } from "../../../types";
+import { EVENTS } from "../../../types";
 
 export class Header extends Component<IHeader> {
   protected counterElement: HTMLElement;
